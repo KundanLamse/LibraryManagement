@@ -36,3 +36,18 @@ class LibraryManagementSystem:
         else:
             cursor.close()
             raise ValueError("Book is not available")
+    def view_books(self):
+        cursor=self.conn.cursor()
+        query="SELECT * FROM books WHERE Count > 0"
+        cursor.execute(query)
+        results=cursor.fetchall()
+        books=[]
+        for row in results:
+            books.append({
+                'ISBN':row[0],
+                'Author':row[1],
+                'Title':row[2],
+                'Year':row[3],
+                'Count':row[4]
+            })
+        return books
