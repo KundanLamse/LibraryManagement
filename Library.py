@@ -16,4 +16,8 @@ class LibraryManagementSystem:
         )
     
     def add_book(self,ISBN,Author,Title,Year,Count):
-        pass
+        cursor=self.conn.cursor()
+        query="INSERT INTO books (ISBN,Author,Title,Year,Count) VALUES (%s, %s, %s, %s, %s)"
+        cursor.execute(query,(ISBN,Author,Title,Year,Count))
+        self.conn.commit()
+        cursor.close()
