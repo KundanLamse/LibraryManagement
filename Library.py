@@ -22,4 +22,17 @@ class LibraryManagementSystem:
         self.conn.commit()
         cursor.close()
     def book_borrow(self,ISBN):
-        pass
+        cursor = self.conn.cursor()
+        query = "SELECT Count FROM books WHERE ISBN = %s"
+        cursor.execute(query, (ISBN,))
+        result = cursor.fetchone()
+        if result and result[0] > 0:
+            # Update the count 
+            update_query = "UPDATE books SET Count = Count - 1 WHERE ISBN = %s"
+            cursor.execute(update_query, (ISBN,))
+            self.conn.commit()
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            raise ValueError("Book is not available")
