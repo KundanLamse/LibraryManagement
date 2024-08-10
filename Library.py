@@ -51,3 +51,16 @@ class LibraryManagementSystem:
                 'Count':row[4]
             })
         return books
+    def return_book(self, ISBN):
+        cursor = self.conn.cursor()
+        query = "SELECT Count FROM books WHERE ISBN = %s"
+        cursor.execute(query, (ISBN,))
+        result = cursor.fetchone()
+        if result:
+            update_query = "UPDATE books SET Count = Count + 1 WHERE ISBN = %s"
+            cursor.execute(update_query, (ISBN,))
+            self.conn.commit()
+        else:
+            raise ValueError("Book not found")
+        cursor.close()
+
