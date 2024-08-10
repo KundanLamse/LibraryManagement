@@ -21,3 +21,5 @@ class LibraryManagementSystem:
         cursor.execute(query,(ISBN,Author,Title,Year,Count))
         self.conn.commit()
         cursor.close()
+    def book_borrow(self,ISBN):
+        pass
