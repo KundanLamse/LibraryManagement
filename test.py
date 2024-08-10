@@ -54,12 +54,22 @@ def test_borrow_failure():
 def test_view_books():
     LMS,mock_cursor,_=conn()
     mock_cursor.fetchall.return_value = [
-        ('123-456-789', 'William', 'Othello', 1622, 5)]
+        ('123-456-789', 'William', 'Othello', 1622, 5)] #expected result when fetchall () is executed in actuality
     expected_books = [
         {'ISBN': '123-456-789', 'Author': 'William', 'Title': 'Othello', 'Year': 1622, 'Count': 5}
-           ]
+           ] # This is for validating the format in which data will be strored
     result = LMS.view_books()
     assert result == expected_books
     # Verify the database interaction
     mock_cursor.execute.assert_called_once_with("SELECT * FROM books WHERE Count > 0")
-    
+def test_return_book():
+    LMS, mock_cursor, mock_conn = conn()
+    mock_cursor.fetchone.return_value = (5,)
+    LMS.return_book('123-456-789')
+    mock_cursor.execute.assert_any_call(
+        "SELECT Count FROM books WHERE ISBN = %s", ('123-456-789',)
+    )
+    mock_cursor.execute.assert_any_call(
+        "UPDATE books SET Count = Count + 1 WHERE ISBN = %s", ('123-456-789',)
+    )
+    mock_conn.commit.assert_called_once()
