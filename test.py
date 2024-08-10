@@ -5,6 +5,7 @@ from Library import LibraryManagementSystem
 def conn():
     db_conn=MagicMock()
     cursor=MagicMock()
+    db_conn.cursor.return_value=cursor
     with patch('mysql.connector.connect', return_value=db_conn):
         # Create an instance of LibraryManagementSystem
         LMS = LibraryManagementSystem()
